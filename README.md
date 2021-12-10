@@ -1,1 +1,1 @@
-# ECE6930-project
+# ECE6930-project: Crop Monitor System
