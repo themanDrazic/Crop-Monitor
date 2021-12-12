@@ -1,0 +1,24 @@
+#$/bin/bash
+#
+# script to test gpio pins using pigpio gpiotest code
+#
+#   jfs9 7/9/2021
+#
+
+echo ""
+echo "*************************************"
+echo "*                                   *"
+echo "*     Running test on RPi GPIOs     *"
+echo "*                                   *"
+echo "*************************************"
+echo ""
+echo ">>>>      starting pigpio daemon <<<< " 
+echo ""
+#start pigpiod daemon 
+sudo pigpiod
+
+echo ""
+echo ">>>>      Running test on GPIOs (have to hit enter key!)  <<<<"
+echo ""
+# Run gpio test
+/home/pi/gpiotest
