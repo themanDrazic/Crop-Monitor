@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CornBoard</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../static/css/grid.css"/>
+        <link rel="stylesheet" href="../static/css/page.css"/>
+        <link rel="stylesheet" href="../static/css/charts.css"/>
+        <link rel="stylesheet" href="../static/css/bulma.css"/>
+
+        <style>
+            .custom-navbar {background-color: #CDE7F4;}
+            .clr-1 {background-color: #90caf9;}
+            .clr-2 {background-color: #e2cc94;}
+            .clr-3 {background-color: #f5cac3;}
+            .clr-4 {background-color: #b0f2b4;}
+            .clr-5 {background-color: #f38375;}
+            .clr-6 {background-color: #b8b8ff;}
+            .clr-7 {background-color: #fefae0;}
+            .clr-8 {background-color: #e4c1f9;}
+            .clr-9 {background-color: #98f5e1;}
+            .clr-10 {background-color: #cbc0d3;}
+            .clr-11 {background-color: #fe6d73;}
+
+            .connected-client {background-color: green;}
+            .disconnected-client {background-color: red;}
+        </style>
+            
+    </head>
+    <body>
+
+<nav class="navbar custom-navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="#">
+            <span class="title is-4">CornBoard</span>
+        </a>
+    </div>
+    <div class="navbar-menu">
+        <div class="navbar-start">
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    Options
+                </a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">
+                        Configuration
+                    </a>
+                    <a class="navbar-item">
+                        Quit
+                    </a>
+                    <a class="navbar-item">
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    Data
+                </a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">
+                        Search
+                    </a>
+                    <a class="navbar-item">
+                        Export
+                    </a>
+                    <a class="navbar-item">
+                        Database
+                    </a>
+                </div>
+            </div>
+                <div class="navbar-item">
+                    <div class="select">
+                        <select id="roverSelect">
+                            <option value="">None</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+</nav>
+
+
+    <section class="section">
+        <div class="container">
+            <div class="tile is-ancestor">
+                <div class="tile is-vertical is-3">
+                    <div class="tile">
+                        <div class="tile is-parent">
+                            <article class="tile is-child box clr-10">
+                                <p id="connStatus"></p>
+                                <p id="dataID"></p>
+                                rover status
+                            </article>
+                        </div>
+                    </div>
+                    <div class="tile">
+                        <div class="tile is-parent">
+                            <article class="tile is-child box clr-4">
+                                <p id="dataTime24hr"></p>
+                                <p id="dataDate"></p>
+                                last sync
+                            </article>
+                        </div>
+                    </div>
+                    <div class="tile">
+                        <div class="tile is-parent">
+                            <article class="tile is-child box clr-5">
+                                warnings/ errors
+                            </article>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-parent is-9">
+                    <article class="tile is-child box clr-1">
+                        main data 1
+                    </article>
+                </div>
+            </div>
+
+            <div class="tile is-ancestor">
+                <div class="tile is-parent is-4">
+                    <article class="tile is-child box clr-10">
+                        numerical data 1
+                    </article>
+                </div>
+                <div class="tile is-parent is-8">
+                    <article class="tile is-child box clr-2">
+                        rover elevation line plot
+                    </article>
+                </div>
+            </div>
+
+            <div class="tile is-ancestor">
+                <div class="tile is-parent is-10">
+                    <article class="tile is-child box clr-4">
+                        main data 2
+                    </article>
+                </div>
+                <div class="tile is-2">
+                    <div class="tile is-vertical">
+                        <div class="tile">
+                            <div class="tile is-parent is-6">
+                                <article class="tile is-child box clr-8">
+                                    button 1
+                                </article>
+                            </div>
+                            <div class="tile is-parent is-6">
+                                <article class="tile is-child box clr-5">
+                                    button 2
+                                </article>
+                            </div>
+                        </div>
+                        <div class="tile">
+                            <div class="tile is-parent is-6">
+                                <article class="tile is-child box clr-2">
+                                    button 3
+                                </article>
+                            </div>
+                            <div class="tile is-parent is-6">
+                                <article class="tile is-child box clr-1">
+                                    button 4
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tile is-ancestor">
+                <div class="tile is-parent is-6">
+                    <article class="tile is-child box height-15 clr-5">
+                        rover historical stats
+                    </article>
+                </div>
+                <div class="tile is-parent is-6">
+                    <article class="tile is-child box height-15 clr-6">
+                        historic data 
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>    
+    </body>
+    <footer class="footer custom-footer" role="contentinfo">
+        <div class="container">
+            <div class="level">
+                <div class="level-left">
+                    <div class="level-item">
+                        <div>
+                            <span class="title is-4">CornBoard</span>
+                            <p>Dashboard for accessing, managing, and visually analyzing data from Cornell ECE Corn Height Measuring Rover</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <span>Steven Rakhmanchik<br>Cornell University 2023</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+<script>
+
+async function fetchData() {
+  const response = await fetch("/get_data");
+  const data = await response.json();
+
+  const selectElement = document.getElementById("roverSelect");
+  const selectedRover = selectElement.value;
+
+  if (selectedRover === "") {
+    clearData();
+    return;
+  }
+
+  const roverData = data.filter((entry) => entry.ID === selectedRover);
+
+  if (roverData.length > 0) {
+    const latestData = roverData[roverData.length - 1];
+    document.getElementById("connStatus").classList.add("connected-client");
+    document.getElementById("connStatus").classList.remove("disconnected-client");
+    document.getElementById("connStatus").innerText = `Connected`;
+    document.getElementById("dataID").innerText = `ID: ${latestData.ID}`;
+    document.getElementById("dataTime24hr").innerText = `TIME24hr: ${latestData.TIME24hr}`;
+    document.getElementById("dataDate").innerText = `DATE: ${latestData.DATE}`;
+  } else {
+    document.getElementById("connStatus").classList.remove("connected-client");
+    document.getElementById("connStatus").classList.add("disconnected-client");
+    document.getElementById("connStatus").innerText = `Not Connected`;
+    clearData();
+  }
+}
+
+
+function clearData() {
+  document.getElementById("connStatus").innerText = `Not Connected`;
+  document.getElementById("dataID").innerText = "";
+  document.getElementById("dataTime24hr").innerText = "";
+  document.getElementById("dataDate").innerText = "";
+
+  // Add the None option to the dropdown if it's not already there
+  const selectElement = document.getElementById("roverSelect");
+  const options = selectElement.options;
+  const noneOption = Array.from(options).find((option) => option.value === "");
+  if (!noneOption) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.text = "None";
+    selectElement.add(option);
+  }
+
+  // If the selected rover is not in the dropdown, add it
+  const selectedRover = selectElement.value;
+  const roverOption = Array.from(options).find((option) => option.value === selectedRover);
+  if (!roverOption) {
+    const option = document.createElement("option");
+    option.value = selectedRover;
+    option.text = selectedRover;
+    selectElement.add(option);
+  }
+}
+
+// Add a global variable to store the selected rover ID
+let selectedRover = '';
+
+function updateRoversInDropdown() {
+  const dropdown = document.getElementById("roverSelect");
+  const noneOption = document.createElement("option");
+  noneOption.value = "";
+  noneOption.textContent = "None";
+  dropdown.innerHTML = "";
+  dropdown.appendChild(noneOption);
+
+  // Populate the dropdown with all the rovers from the historical database
+  fetch("/get_clients")
+    .then((response) => response.json())
+    .then((clients) => {
+      clients.forEach((client) => {
+        const option = document.createElement("option");
+        option.value = client;
+        option.textContent = client;
+        dropdown.appendChild(option);
+      });
+      // Select the previously selected rover ID if it is still in the dropdown
+      if (selectedRover && [...dropdown.options].some((option) => option.value === selectedRover)) {
+        dropdown.value = selectedRover;
+      }
+    })
+    .catch((error) => console.error("Error fetching clients:", error));
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  updateRoversInDropdown();
+  updateData();
+});
+
+document.getElementById("roverSelect").addEventListener("change", () => {
+  selectedRover = document.getElementById("roverSelect").value;
+  fetchData();
+});
+
+// Call the function to update the clients dropdown every 5 seconds
+setInterval(() => {
+  updateRoversInDropdown();
+  updateData();
+}, 5000);
+
+function updateData() {
+  fetchData();
+}
+
+window.onload = updateData;
+setInterval(updateData, 1000);
+
+</script>
+</html>

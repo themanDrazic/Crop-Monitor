@@ -1,0 +1,52 @@
+.flex-container {
+  display: flex;
+  background-color: Purple;
+  width: 800px;
+}
+
+.flex-container > div {
+  background-color: Orange;
+  margin: 30px;
+  padding: 20px;
+  font-size: 20px;
+}
+
+.row {
+  padding-bottom: 2px;
+  padding-top: 2px;
+}
+.column-border {
+  border: 1px solid Black;
+  border-radius: 5px;
+  padding: 2px;
+  height: 100%;
+  min-height: 100px;
+}
+
+.row-stretch {
+  display: flex;
+  align-items: stretch;
+}
+
+.height-6 {
+  height: 6rem;
+}
+
+.height-15 {
+  height: 15rem;
+}
+
+.clear {
+  opacity: 0%;
+}
+.back-1 {
+  background-color:#CDE7F4;
+}
+
+.back-2 {
+  background-color:#FFD6E0;
+}
+
+.box {
+  background-color:#CDE7F4;
+}

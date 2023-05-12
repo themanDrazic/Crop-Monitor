@@ -1,0 +1,27 @@
+.custom-navbar {
+    background-color: #4a4e69;
+}
+custom-footer {
+    background-color: #CDE7F4;
+    padding: 10px
+    
+}
+#search-panel {
+    flex-direction: row;
+    align-items: center;
+    display: none;
+}
+
+select {
+  appearance: none;
+  outline: none;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #363636;
+  cursor: pointer;
+  width: 100%;
+}
+
