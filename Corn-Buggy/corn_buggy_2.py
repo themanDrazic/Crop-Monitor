@@ -7,6 +7,7 @@ import csv
 from multiprocessing import Process, Queue
 from datetime import datetime
 import sys, pygame
+from scipy.spatial import KDTree
 max_value = 255
 max_type = 4
 max_binary_value = 255
@@ -220,6 +221,21 @@ def order_points(pts):
 	rect[3] = pts[np.argmax(diff)]
 	# return the ordered coordinates
 	return rect
+
+from scipy.spatial import KDTree
+
+def order_points_kdtree(pts):
+    # Build a KDTree for efficient point operations
+    kdtree = KDTree(pts)
+    
+    # Query the KDTree for sorted distances
+    dists, idx = kdtree.query(pts, k=4)
+    
+    # Order points by ascending distance
+    ordered_pts = pts[idx]
+
+    return ordered_pts
+
 
 def four_point_transform(image, pts):
 	# obtain a consistent order of the points and unpack them
