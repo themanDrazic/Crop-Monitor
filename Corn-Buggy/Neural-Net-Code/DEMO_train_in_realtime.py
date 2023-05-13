@@ -1,3 +1,4 @@
+# Don't actually use this other than to grab some code snippets.
 # computation intensive, most likely will not work on Raspberry Pi 3
 import cv2
 import VL53L1X
