@@ -1,28 +1,28 @@
 // Add this code to a .ino Arduino file
 // Script to combine all sensors and Data Logger
 // 6x photocell, A0-A5
-// 1x Moisture Sensor, Digital Pin 10 (TBD)
+// 1x Moisture Sensor, Analog Pin A7
 // 1x BH1750, SDA and SCL
-// SD Card Data Logger Shield
-#include <Arduino.h>
-#include <hp_BH1750.h>
+// 1x SD Card Data Logger Shield, SPI
+// 1x Pushbutton, Digital Pin 22
 
 #include <SPI.h>
-#include "SD.h"
+#include <SD.h>
 #include <Wire.h>
 
-#include <Adafruit_GPS.h>
-
-// Global Variables
+#include <hp_BH1750.h>
+#include <Arduino.h>
 
 // Photocell Resistor Variables
-const int photocellPins[6] = {A0, A1, A2, A3, A4, A5};
+const int photocellPins[6] = {A8, A9, A11, A10, A12, A13}; // Closest to furthest from the arduino.
 int photocellReadings[6] = {0, 0, 0, 0, 0, 0};
 
-// Moisture Sensor Variables
-// const int moisturePin = 10; // Define soil moisture analog pin
+int moisturePin = A7; // Define soil moisture analog pin
 int moistureReading = 0; // Define soil moisture reading variable
-int moisturePin = 3; // Define soil moisutre digital pin
+
+// Pushbutton variables
+const int button = 22;
+int buttonFlag = 0;
 
 // BH1750 Light Sensor Variables
 hp_BH1750 BH1750; // Create the BH1750 light sensor
@@ -34,10 +34,6 @@ const int chipSelect = 10;
 // the logging file
 File logfile;
 
-// GPS with Software Serial  - Unused in this script
-SoftwareSerial mySerial(8, 7);
-Adafruit_GPS GPS(&mySerial);
-
 void error(char *str)
 {
   Serial.print("error: ");
@@ -46,8 +42,10 @@ void error(char *str)
   while(1);
 }
 
+char filename[8] = "L00.CSV";
 void setup() {
-  Serial.begin(9600); // Start Serial comm channel
+  Serial.begin(9600);
+  pinMode(button, INPUT); // Setup push button pin
 
   // Setup BH1750 sensor
   if(!BH1750.begin(BH1750_TO_GROUND)){
@@ -55,9 +53,6 @@ void setup() {
     while (true) {} // halt program code
   }
   BH1750.start();
-
-  pinMode(10, INPUT); // Setup mositure sensor pin
-  pinMode(3, INPUT); // Setup push button pin
 
   // SD Card Setup
   pinMode(chipSelect, OUTPUT);
@@ -68,48 +63,43 @@ void setup() {
   Serial.println("SD Initialized.");
 
   // create a new file
-  char filename[13] = "dataLog00.CSV";
   for (uint8_t i = 0; i < 100; i++) {
-    filename[7] = i/10 + '0';
-    filename[8] = i%10 + '0';
-
-    // only open a new file if it doesn't exist - max of 100 files 
+    filename[1] = i/10 + '0';
+    filename[2] = i%10 + '0';
     if (! SD.exists(filename)) {
+      // only open a new file if it doesn't exist
       logfile = SD.open(filename, FILE_WRITE); 
       break;  // leave the loop!
     }
   }
-  // Stop process if file write doesn't work
+
   if (! logfile) {
+    Serial.println("Cannot write a new file. File capacity reached (100/100)");
     while(1);
   }
 
   Serial.print("Logging to: ");
   Serial.println(filename);
-
-  // GPS setup
-  // GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-  // GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
-
 }
 
 void loop() {
-  int buttonFlag = 0;
-  // Check for button press
-  while (digitalRead(3) == 1){
-    if (buttonFlag == 0){
-      // Only take one sample per button press - Could upgrade to ISR if needed
-      buttonFlag = 1;
+  buttonFlag = 0;
 
+  // Button loop. Writes data once per press.
+  while (digitalRead(button) == 1){
+    if (buttonFlag == 0){
       // Read sensors
       read_photocells();
       read_BH1750();
       read_moisture_probe();
-      print_readings();
+      // print_readings(); // Print readings to serial monitor for debugging.
 
       // Write all readings to SD card
       write_readings();
-      delay(100);
+      logfile.flush();
+
+      // Only take one sample per button press - Could upgrade to ISR if needed
+      buttonFlag = 1;
     }
   }
 }
@@ -125,6 +115,11 @@ void read_photocells(){
   photocellReadings[5] = analogRead(photocellPins[5]); // Read photoresistor 6
 }
 
+// Function that reads moisture sensor
+void read_moisture_probe(){
+  moistureReading = analogRead(moisturePin);
+}
+
 // Function that reads the BH1750 light sensor (ambient sensor) 
 void read_BH1750(){
   // Measure lux of ambient lighting (BH1750)
@@ -137,44 +132,26 @@ void read_BH1750(){
   }
 }
 
-// Function that reads moisture sensor
-void read_moisture_probe(){
-  moistureReading = digitalRead(moisturePin);
-}
-
-// Function that prints sensor readings to Arduino Serial monitor
-void print_readings(){
-  // Print all readings
-  for(int i = 0; i < 6; i++){
-    Serial.print(String(photocellReadings[i]));
-    Serial.println(",");
-  }
-  Serial.print(String(moistureReading));
-  Serial.print(",");
-  Serial.println(String(lux));
-}
-
-// Functions that writes all sensor readings to the SD card
-// Format of write as follows:
-// ambientLux,photocell1,photocell2,photocell3,photocell4,photocell5,photocell6,moistureReading
 void write_readings() {
   // Write all readings to the SD card
   logfile.print(String(lux) + ",");
+  // string data;
   for(int i = 0; i < 6; i++){
     logfile.print(String(photocellReadings[i]) + ",");
   }
   logfile.print(String(moistureReading) + ",");
-  logfile.println();
-  logfile.flush();
+  logfile.println("");
+  delay(10);
+  // logfile.flush();
+  delay(15);
 }
 
-// Interrupt Function. Function to be called if/when an interrupt is added to prototype
-void interrupt_routine() {
-  // Read sensors
-  read_photocells();
-  read_BH1750();
-  read_moisture_probe();
-
-  // Write all readings to SD card
-  write_readings();
+void print_readings() {
+  // Print all readings to the Serial Monitor
+  Serial.print(String(lux) + ",");
+  for (int i = 0; i < 6; i++){
+    Serial.print(String(photocellReadings[i]) + ",");
+  }
+  Serial.print(String(moistureReading));
+  Serial.println("");
 }
