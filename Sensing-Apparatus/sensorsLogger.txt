@@ -1,9 +1,9 @@
-// Add this code to a .ino Arduino file
+// Add this code to a .ino Arduino file for an Arduino Mega
 // Script to combine all sensors and Data Logger
-// 6x photocell, A0-A5
+// 6x photocell, Analog Pins A8-A13
 // 1x Moisture Sensor, Analog Pin A7
 // 1x BH1750, SDA and SCL
-// 1x SD Card Data Logger Shield, SPI
+// 1x SD Card Data Logger Shield, SPI and Digital Pin 10
 // 1x Pushbutton, Digital Pin 22
 
 #include <SPI.h>
