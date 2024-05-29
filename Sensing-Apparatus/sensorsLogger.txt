@@ -80,6 +80,10 @@ void setup() {
 
   Serial.print("Logging to: ");
   Serial.println(filename);
+
+  // Add Data Headers to file
+  logfile.println("Ambient Light,Canopy 1,Canopy 2,Canopy 3,Canopy 4,Canopy 5,Canopy 6,Soil Moiture");
+  logfile.flush();
 }
 
 void loop() {
